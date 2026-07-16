@@ -1,0 +1,35 @@
+# Enterprise Credit Risk Platform Core Configurations
+
+artifacts_dir: artifacts
+
+data_ingestion:
+  source_data_path: C:\Users\diwak\Downloads\application_train.csv
+  raw_data_dir: data/raw
+  ingested_dir: artifacts/data_ingestion
+  train_file_name: train.csv
+  test_file_name: test.csv
+  test_size: 0.2
+  random_state: 42
+
+data_validation:
+  validation_report_dir: artifacts/data_validation
+  drift_report_file_name: drift_report.json
+  schema_file_path: configs/schema.yaml
+
+data_transformation:
+  transformed_dir: artifacts/data_transformation
+  transformed_train_file_name: transformed_train.parquet
+  transformed_test_file_name: transformed_test.parquet
+  preprocessing_pipeline_file_name: preprocessor.pkl
+
+model_trainer:
+  model_dir: artifacts/model_trainer
+  model_file_name: model.pkl
+  expected_score_threshold: 0.6
+  overfitting_threshold: 0.1
+
+model_evaluation:
+  evaluation_report_dir: artifacts/model_evaluation
+  mlflow_tracking_uri: ""  # Leave blank for local SQLite backend
+  mlflow_experiment_name: CreditRiskPrediction
+  target_column: TARGET
