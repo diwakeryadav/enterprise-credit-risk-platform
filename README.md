@@ -1,4 +1,4 @@
-# Enterprise Credit Risk Prediction Platform (Citi/JPMorgan Grade)
+# Enterprise Credit Risk Prediction Platform 
 
 An enterprise-grade, end-to-end Machine Learning and MLOps system to predict loan default probability, structured to comply with Tier-1 banking regulations (such as **Federal Reserve SR 11-7** for Model Risk Management and **BCBS 239** for Risk Data Aggregation).
 
