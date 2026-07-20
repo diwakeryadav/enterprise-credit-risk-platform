@@ -1,6 +1,6 @@
+import logging
 import os
 import sys
-import logging
 from datetime import datetime
 
 # Define log file name and directory
@@ -17,10 +17,7 @@ LOG_FILE_PATH: str = os.path.join(LOG_DIR_PATH, LOG_FILE_NAME)
 logging.basicConfig(
     format="[%(asctime)s] %(name)s - %(levelname)s - [%(filename)s:%(lineno)d] - %(message)s",
     level=logging.INFO,
-    handlers=[
-        logging.FileHandler(LOG_FILE_PATH),
-        logging.StreamHandler(sys.stdout)
-    ]
+    handlers=[logging.FileHandler(LOG_FILE_PATH), logging.StreamHandler(sys.stdout)],
 )
 
 # Export the logger object for universal use

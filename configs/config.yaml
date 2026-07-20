@@ -33,3 +33,12 @@ model_evaluation:
   mlflow_tracking_uri: ""  # Leave blank for local SQLite backend
   mlflow_experiment_name: CreditRiskPrediction
   target_column: TARGET
+
+monitoring:
+  drift_threshold: 0.1  # Fraction of columns allowed to drift before warning
+  p_value_threshold: 0.05  # Threshold for statistical significance (e.g. KS-test)
+
+explainability_agent:
+  model_name: "gpt-4o-mini"
+  temperature: 0.0
+  max_revisions: 2

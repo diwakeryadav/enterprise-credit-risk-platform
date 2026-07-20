@@ -1,0 +1,18 @@
+required_keys:
+  - artifacts_dir
+  - data_ingestion
+  - data_validation
+  - data_transformation
+  - model_trainer
+  - model_evaluation
+  - monitoring
+  - explainability_agent
+
+data_ingestion_keys:
+  - source_data_path
+  - raw_data_dir
+  - ingested_dir
+  - train_file_name
+  - test_file_name
+  - test_size
+  - random_state

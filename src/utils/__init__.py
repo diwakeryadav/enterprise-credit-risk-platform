@@ -1,8 +1,1 @@
-from src.utils.common import (
-    read_yaml,
-    create_directories,
-    save_json,
-    load_json,
-    save_bin,
-    load_bin
-)
+from src.utils.common import create_directories, load_bin, load_json, read_yaml, save_bin, save_json  # noqa: F401

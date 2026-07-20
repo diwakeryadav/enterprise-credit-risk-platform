@@ -6,6 +6,7 @@ xgboost>=1.7.0
 lightgbm>=4.0.0
 shap>=0.42.0
 scipy>=1.10.0
+evidently>=0.4.15
 
 # Experiment Tracking and Serialization
 mlflow>=2.10.0
@@ -17,5 +18,13 @@ fastapi>=0.100.0
 uvicorn>=0.22.0
 pydantic>=2.0.0
 
+# Agentic Explainability
+langgraph>=0.0.15
+langchain-openai>=0.1.0
+
 # Testing and Quality Assurance
 pytest>=7.0.0
+black>=23.0.0
+flake8>=6.0.0
+mypy>=1.4.0
+isort>=5.12.0

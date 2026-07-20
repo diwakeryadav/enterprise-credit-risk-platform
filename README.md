@@ -42,13 +42,18 @@ enterprise-credit-risk-platform/
 ├── reports/                  # Validation reports and drift stats
 ├── notebooks/                # Exploratory Data Analysis & experiments
 ├── tests/                    # Automation test suite (Pytest)
+│   ├── test_api.py           # API integration tests
+│   └── test_config.py        # Config schema structure checks
 ├── src/                      # Source code directory
-│   ├── api/                  # FastAPI serving layer
+│   ├── api/                  # FastAPI serving layer (Routes and dashboard UI)
+│   │   ├── routes/           # Explainability and monitoring API endpoints
+│   │   └── templates/        # Dashboard HTML/CSS templates
 │   ├── components/           # Pipeline components (Ingestion, Validation, Transformation, etc.)
 │   ├── config/               # Configuration loading & directory setups
 │   ├── constants/            # Global constants and file paths
 │   ├── entity/               # Typed frozen configuration and artifact dataclasses
 │   ├── exception/            # Structured traceback custom exceptions
+│   ├── explainability/       # Multi-agent LangGraph system for compliance explainability
 │   ├── logger/               # Rotated file and stream logger utilities
 │   ├── pipeline/             # Training and prediction pipelines
 │   └── utils/                # Standard file and binary serialization utilities
@@ -73,6 +78,21 @@ We have successfully established the production foundation for the project:
 5. **Common File Utilities** ([src/utils/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/utils/)): Implemented safe, robust binary serialization using `dill` (capable of pickling complex data transformers) along with JSON and YAML helper functions.
 6. **Domain Entities** ([src/entity/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/entity/)): Configured immutable (`frozen=True`) dataclasses for configurations and artifact delivery, ensuring strict input/output contracts between pipeline stages.
 7. **Configuration Manager** ([src/config/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/config/)): Centralized parser that loads configs and automatically bootstraps all directories at pipeline runtime.
+
+### Phase 2: Core Components & Interactive API Serving (Completed)
+We have designed and developed the core risk validation components, regulatory-compliant AI models, and real-time dashboard API:
+1. **Data Validation Component** ([src/components/data_validation.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/components/data_validation.py)): Implements `DataDriftDetector` that utilizes **Evidently AI** to perform feature drift detection (e.g. using Kolmogorov-Smirnov test statistics) between reference datasets (training baseline) and target datasets. Generates audit-compliant JSON reports.
+2. **Explainability Agent** ([src/explainability/agent.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/explainability/agent.py)): Built a **LangGraph-based multi-agent workflow** to generate compliant loan denial explanations from SHAP feature importances and applicant data.
+   - **SHAP Analysis Node**: Extracts the top 3 features contributing to default risk.
+   - **Business Explanation Node**: Drafts a business-friendly, plain English narrative using LLMs (`gpt-4o-mini`).
+   - **Compliance Review Node**: Audits the draft against FCRA/ECOA rules. Loops to revise the narrative if compliance criteria are not met.
+3. **FastAPI Serving Layer** ([src/api/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/api/)):
+   - `/health`: Health status endpoint.
+   - `POST /api/v1/explainability/explain-denial`: Exposes the LangGraph explainability workflow to generate compliant denial explanations.
+   - `POST /api/v1/monitoring/check-drift`: Triggers feature drift detection on batch inference data.
+   - `POST /api/v1/monitoring/setup-demo`: Utility endpoint to automatically generate synthetic baseline and clean/drifted batch datasets.
+4. **Interactive Dashboard** ([src/api/templates/index.html](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/api/templates/index.html)): A dark-themed, glassmorphic UI served at `/` to let users load preset loan profiles, evaluate applicant data against compliance agents, visualize agent state progression, and trigger data drift checks.
+5. **Test Automation** ([tests/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/tests/)): Implemented comprehensive integration tests under `tests/test_api.py` and `tests/test_config.py` using `pytest`.
 
 ---
 
@@ -105,4 +125,17 @@ python test_exception.py
 # Verify configuration parser parses yaml and boots folders
 python -c "from src.config import ConfigurationManager; cm = ConfigurationManager(); print(cm.get_data_ingestion_config())"
 ```
-Check the console output and verify that a new log folder (`/logs`) and file-level configurations have been created.
+
+### 5. Running the Application and UI Dashboard
+You can run the FastAPI server locally:
+```bash
+python src/api/main.py
+```
+* **Dashboard Access**: Open `http://localhost:8000/` in your browser.
+* **API Documentation (Swagger UI)**: Open `http://localhost:8000/docs`.
+
+### 6. Running Automated Tests
+To run unit and integration tests:
+```bash
+python -m pytest
+```

@@ -1,15 +1,16 @@
-from dataclasses import dataclass
-from pathlib import Path
 import shutil
 import sys
-from src.logger import logger
+from dataclasses import dataclass
+from pathlib import Path
+
 from src.exception import CreditRiskException
+from src.logger import logger
 
 
 @dataclass
 class DataIngestionConfig:
-    source_data_path : Path
-    raw_data_path : Path
+    source_data_path: Path
+    raw_data_path: Path
 
 
 class DataIngestion:
@@ -20,18 +21,9 @@ class DataIngestion:
         logger.info("starting data ingestion process.")
 
         try:
-            self.config.raw_data_path.mkdir(
-                parents =True,
-                exist_ok = True
-            )
-            destination = (
-                self.config.raw_data_path /
-                self.config.source_data_path.name
-            )
-            shutil.copy(
-                self.config.source_data_path,
-                destination
-            )
+            self.config.raw_data_path.mkdir(parents=True, exist_ok=True)
+            destination = self.config.raw_data_path / self.config.source_data_path.name
+            shutil.copy(self.config.source_data_path, destination)
             logger.info("Data Ingestion completed successfully.")
             return destination
         except Exception as e:
