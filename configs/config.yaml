@@ -39,6 +39,8 @@ monitoring:
   p_value_threshold: 0.05  # Threshold for statistical significance (e.g. KS-test)
 
 explainability_agent:
-  model_name: "gpt-4o-mini"
+  model_name: "deepseek-r1:1.5b"
+  base_url: "http://localhost:11434/v1"
+  api_key: "ollama"
   temperature: 0.0
   max_revisions: 2

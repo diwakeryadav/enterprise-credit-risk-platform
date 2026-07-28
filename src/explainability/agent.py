@@ -1,10 +1,12 @@
 import sys
+import yaml
 from typing import Any, Dict, List, TypedDict
 
 from langchain_core.messages import HumanMessage, SystemMessage
 from langchain_openai import ChatOpenAI
 from langgraph.graph import END, StateGraph
 
+from src.constants import CONFIG_FILE_PATH
 from src.exception import CreditRiskException
 from src.explainability.prompts import (SYSTEM_COMPLIANCE_PROMPT,
                                         SYSTEM_DRAFT_PROMPT,
@@ -27,12 +29,35 @@ class ExplainabilityState(TypedDict):
 class ExplainabilityAgent:
     def __init__(
         self,
-        model_name: str = "gpt-4o-mini",
-        temperature: float = 0.0,
-        max_revisions: int = 2,
+        model_name: str = None,
+        temperature: float = None,
+        max_revisions: int = None,
     ):
-        self.llm = ChatOpenAI(model=model_name, temperature=temperature)
-        self.max_revisions = max_revisions
+        try:
+            with open(CONFIG_FILE_PATH, "r") as f:
+                config = yaml.safe_load(f)
+            agent_config = config.get("explainability_agent", {})
+        except Exception:
+            agent_config = {}
+
+        model_name = model_name or agent_config.get("model_name", "gpt-4o-mini")
+        temperature = temperature if temperature is not None else agent_config.get("temperature", 0.0)
+        self.max_revisions = max_revisions if max_revisions is not None else agent_config.get("max_revisions", 2)
+        
+        base_url = agent_config.get("base_url")
+        api_key = agent_config.get("api_key")
+
+        llm_kwargs = {
+            "model": model_name,
+            "temperature": temperature
+        }
+        if base_url:
+            llm_kwargs["base_url"] = base_url
+        if api_key:
+            llm_kwargs["api_key"] = api_key
+
+        logger.info(f"Initializing ExplainabilityAgent with model={model_name}, base_url={base_url}")
+        self.llm = ChatOpenAI(**llm_kwargs)
         self.workflow = self._build_graph()
 
     def _build_graph(self) -> StateGraph:

@@ -21,6 +21,7 @@ pydantic>=2.0.0
 # Agentic Explainability
 langgraph>=0.0.15
 langchain-openai>=0.1.0
+langchain-google-genai>=2.0.0
 
 # Testing and Quality Assurance
 pytest>=7.0.0
