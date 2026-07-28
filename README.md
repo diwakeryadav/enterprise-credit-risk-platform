@@ -2,7 +2,17 @@
 
 An enterprise-grade, end-to-end Machine Learning and MLOps system to predict loan default probability, structured to comply with Tier-1 banking regulations (such as **Federal Reserve SR 11-7** for Model Risk Management and **BCBS 239** for Risk Data Aggregation).
 
-This repository simulates a real-world internal credit scoring system, utilizing robust data validation, feature engineering, explainable AI (SHAP), experiment tracking (MLflow), automated unit tests (Pytest), FastAPI serving, and an interactive glassmorphic dashboard.
+This platform combines traditional machine learning with a **DeepSeek-R1 multi-agent compliance explainability system**, automated data drift detection (**Evidently AI**), and an interactive glassmorphic dashboard built with FastAPI.
+
+---
+
+## 🤖 Active AI Engine: DeepSeek-R1 (Local & Zero-Cost)
+
+The compliance explainability layer in this project runs **DeepSeek-R1** (`deepseek-r1:1.5b` or `deepseek-r1:8b`) locally via **Ollama**. 
+
+* **Zero API Costs**: Runs entirely on local hardware with zero subscription fees or OpenAI quota limits.
+* **OpenAI API Compatibility**: Standardized endpoint integration via `http://localhost:11434/v1`.
+* **Advanced Chain-of-Thought Reasoning**: DeepSeek-R1 excels at step-by-step compliance auditing, protected class checks, and regulatory narrative synthesis under ECOA/FCRA guidelines.
 
 ---
 
@@ -23,7 +33,7 @@ In consumer credit risk modeling, models cannot be simple black boxes due to str
 
 ### 3. Explainable AI and Fair Lending (ECOA / Regulation B)
 * **Adverse Action Reasons**: Generates local SHAP values alongside prediction probabilities, returning the top 3 specific reasons for loan denial to comply with the Equal Credit Opportunity Act (ECOA).
-* **Multi-Agent Regulatory Compliance**: Powered by a **LangGraph** multi-agent graph running **DeepSeek-R1** to generate and iteratively audit adverse action explanations against regulatory guidelines.
+* **Multi-Agent Compliance Auditing**: Powered by a **LangGraph** multi-agent graph running **DeepSeek-R1** to generate and iteratively audit adverse action explanations against regulatory guidelines.
 
 ---
 
@@ -32,7 +42,7 @@ In consumer credit risk modeling, models cannot be simple black boxes due to str
 ```
 enterprise-credit-risk-platform/
 ├── configs/                  # Central YAML configurations and schemas
-│   ├── config.yaml           # Model hyperparameters, drift thresholds & agent configs
+│   ├── config.yaml           # DeepSeek-R1 model params, drift thresholds & agent configs
 │   └── schema.yaml           # Config structure validation schema
 ├── data/                     # Local data storage (raw and processed splits)
 │   ├── raw/
@@ -72,7 +82,7 @@ enterprise-credit-risk-platform/
 
 ### Phase 1: Foundation & Infrastructure
 1. **Pinned Dependency Management** ([requirements.txt](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/requirements.txt)): Core ML libraries, LangGraph, FastAPI, Evidently AI, and Pytest.
-2. **Centralized Configuration System** ([configs/config.yaml](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/configs/config.yaml)): Central YAML settings parsed into immutable frozen dataclasses.
+2. **Centralized Configuration System** ([configs/config.yaml](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/configs/config.yaml)): Central YAML settings configured for `deepseek-r1:1.5b`.
 3. **Structured Rotated Logging** ([src/logger/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/logger/)): Dual console and persistent log file output under `/logs`.
 4. **Detailed Traceback Exceptions** ([src/exception/](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/exception/)): Captures exact Python filenames, line numbers, and trace details.
 5. **Configuration Validator** ([scripts/validate_yaml.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/scripts/validate_yaml.py)): Automated YAML syntax and key completeness verification script.
@@ -81,7 +91,7 @@ enterprise-credit-risk-platform/
 1. **Data Validation Component** ([src/components/data_validation.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/components/data_validation.py)): Feature drift detector powered by **Evidently AI** with JSON audit report outputs.
 2. **DeepSeek-R1 Explainability Agent** ([src/explainability/agent.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/explainability/agent.py)): Multi-agent **LangGraph** workflow for adverse action notices:
    - **SHAP Analysis Node**: Ranks and extracts the top 3 default risk factors.
-   - **Business Explanation Node**: Drafts plain-English denial narratives using **DeepSeek-R1** (locally via Ollama or OpenAI-compatible endpoints).
+   - **Business Explanation Node**: Drafts plain-English denial narratives using **DeepSeek-R1**.
    - **Compliance Audit Node**: Audits text against FCRA/ECOA rules to guarantee protected class exclusion and objectivity.
 3. **FastAPI Web Service** ([src/api/main.py](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/api/main.py)): REST endpoints exposing health status, drift detection, demo dataset generation, and denial explainability.
 4. **Interactive Dashboard** ([src/api/templates/index.html](file:///c:/Users/diwak/OneDrive/Desktop/personal/enterprise-credit-risk-platform/src/api/templates/index.html)): Glassmorphic dashboard to load loan profiles, evaluate applicant data against AI compliance agents, and run statistical data drift checks.
@@ -108,10 +118,9 @@ venv\Scripts\Activate.ps1
 pip install -r requirements.txt
 ```
 
-### 4. (Optional) Set Up Local LLM (DeepSeek-R1 via Ollama)
-To run the explainability agent 100% locally with zero API key costs:
+### 4. Pull Local DeepSeek-R1 Model via Ollama
+Ensure [Ollama](https://ollama.com/) is installed and running, then pull the DeepSeek-R1 model:
 ```bash
-# Pull DeepSeek-R1 model into Ollama
 ollama pull deepseek-r1:1.5b
 ```
 
